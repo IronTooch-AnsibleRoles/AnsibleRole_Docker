@@ -1,0 +1,15 @@
+namespace: irontooch
+name: docker
+version: 2.3.0
+readme: README.md
+authors:
+  - IronTooch
+description: A role to install Docker and Docker Compose on a managed node
+license_file: COPYING
+tags:
+  - docker
+repository: https://github.com/IronTooch/AnsibleRole_Docker
+homepage: https://github.com/IronTooch/AnsibleRole_Docker
+issues: https://github.com/IronTooch/AnsibleRole_Docker/issues
+build_ignore:
+  - .gitignore
