@@ -1,0 +1,90 @@
+---
+- name: Update Apt Cache
+  apt:
+    update_cache: true
+
+- name: Remove old dependencies
+  package:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+
+- name: Install dependencies
+  package:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+
+- name: Install docker GPG key
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+    keyring: "/usr/share/keyrings/docker-archive-keyring.gpg"
+
+- name: Install APT repo for Docker
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable'
+    state: present
+    filename: docker.list
+
+- name: Update Apt Cache
+  apt:
+    update_cache: true
+
+- name: Install Docker
+  package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+
+# - name: Get Github Latest Release asset
+#   block:
+#     - name: Get the latest tag from Github for Docker-Compose
+#       ansible.builtin.uri:
+#         url: "{{ docker_repo }}/latest"
+#       register: latest_release
+
+#     - name: Print latest release details for Docker-Compose
+#       ansible.builtin.debug:
+#         msg: |
+#           Release name: {{ latest_release.name }}
+#           Release tag: {{ latest_release.tag_name }}
+
+#     - name: Set variable for latest release tag
+#       set_fact:
+#         latest_release_tag: "{{ latest_release.tag_name }}"
+
+#     - name: Set variable for latest release tag without 'v'
+#       set_fact:
+#         latest_release_semver: "{{ latest_release_tag | replace('v','') }}"
+#   when: not docker_compose_version
+
+# - name: Set release version to user defined value
+#   ansible.builtin.set_fact:
+#     release_version: "{{ docker_compose_version }}"
+#   when: docker_compose_version
+
+# - name: Set release version to lastest version
+#   ansible.builtin.set_fact:
+#     release_version: "{{ latest_release_tag }}"
+#   when: docker_compose_version
+
+# - name: Download release
+#   ansible.builtin.get_url:
+#     url: "{{ docker_repo }}/download/{{ release_version }}/docker-compose-Linux-x86_64"
+#     dest: "{{ docker_compose_destination_path }}"
+#     mode: a+x
+
+- name: Install Docker Pip  # Needed for Ansible control of Docker containers
+  ansible.builtin.pip:
+    state: present
+    name:
+      - docker-compose

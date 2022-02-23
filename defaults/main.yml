@@ -1,0 +1,4 @@
+---
+docker_compose_version: ""
+docker_repo: "https://github.com/docker/compose/releases/"
+docker_compose_destination_path: "/usr/local/bin/docker-compose"
