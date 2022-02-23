@@ -20,6 +20,8 @@
       - curl
       - gnupg
       - lsb-release
+      - python3-pip
+    state: present
 
 - name: Install docker GPG key
   apt_key:
